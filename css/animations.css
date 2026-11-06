@@ -1,0 +1,254 @@
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drift-a {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(5%, 4%, 0) scale(1.08);
+  }
+}
+
+@keyframes drift-b {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  to {
+    transform: translate3d(-4%, -5%, 0) scale(1);
+  }
+}
+
+@keyframes scan-y {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  8% {
+    opacity: 0.55;
+  }
+  92% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(88vh);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.7);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+@keyframes core-pulse {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(0.94);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+}
+
+@keyframes fan-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes anatomy-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero__glow--cyan {
+  animation: drift-a 18s ease-in-out infinite alternate;
+}
+
+.hero__glow--purple {
+  animation: drift-b 21s 1.5s ease-in-out infinite alternate;
+}
+
+.hero__glow--green {
+  animation: drift-a 24s 3s ease-in-out infinite alternate;
+}
+
+.hero__scan {
+  animation: scan-y 12s 1.2s ease-in-out infinite;
+}
+
+.signal-dot {
+  position: relative;
+}
+
+.signal-dot::after {
+  position: absolute;
+  inset: -3px;
+  content: "";
+  border: 1px solid var(--cyan);
+  border-radius: 50%;
+  animation: pulse-ring 3.2s ease-out infinite;
+}
+
+.live-pill i {
+  animation: pulse-soft 2.2s ease-in-out infinite;
+}
+
+.machine__flow {
+  animation: flow-dash 2.6s linear infinite;
+}
+
+.machine__flow[data-duration="3.6"],
+.machine__flow[data-duration="3.9"] {
+  animation-duration: 3.4s;
+}
+
+.machine__flow[data-duration="4.8"] {
+  animation-duration: 4.2s;
+}
+
+.machine__fan-blades {
+  animation: fan-spin 9s linear infinite;
+}
+
+.component--cpu .machine__die-core {
+  animation: core-pulse 2.8s ease-in-out infinite;
+}
+
+.is-ready .hero__kicker {
+  animation: rise-in 620ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.is-ready .hero__title {
+  animation: rise-in 720ms 150ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.is-ready .hero__subtitle {
+  animation: rise-in 720ms 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.is-ready .hero__actions {
+  animation: rise-in 700ms 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.is-ready .hero__spec {
+  animation: fade-in 800ms 440ms ease both;
+}
+
+.is-ready .hero__visual {
+  animation: fade-in 900ms 220ms ease both;
+}
+
+.is-ready .hero__caption {
+  animation: fade-in 900ms 520ms ease both;
+}
+
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.view.is-active .view-header {
+  animation: rise-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.view.is-active .lab-frame {
+  animation: rise-in 620ms 70ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.view.is-active .view-next {
+  animation: fade-in 620ms 180ms ease both;
+}
+
+.lab-frame[data-module-state="mounted"] .lab-frame__status {
+  animation: fade-in 300ms ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .anatomy__panel.is-entering > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+.dataflow__link.is-live { animation: flow-dash 1.4s linear infinite; }
+.dataflow__particle { filter: url(#df-glow); }
+@media (prefers-reduced-motion: reduce) {
+  .dataflow__link.is-live, .dataflow__panel-inner { animation: none; }
+  .dataflow__particle { display: none; }
+}

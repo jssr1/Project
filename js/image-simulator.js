@@ -1,0 +1,52 @@
+import { t, applyTranslations } from './translations.js';
+
+const PALETTE = ['#35c5e8','#2675d8','#38c98b','#f2b45e','#ff7a85','#ffffff','#0b1d33'];
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const hexToRgb=(hex)=>{ const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex||''); return m?{r:parseInt(m[1],16),g:parseInt(m[2],16),b:parseInt(m[3],16)}:{r:11,g:29,b:51}; };
+const toBin8=(n)=>clamp(n|0,0,255).toString(2).padStart(8,'0');
+const esc=(s)=>String(s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+const state = { root:null, body:null, res:16, pixels:null, color:'#35c5e8', tool:'paint', zoom:16, drawing:false, sel:null, calcW:1920, calcH:1080 };
+function make(n, fill='#0b1d33'){ return Array.from({length:n*n},()=>fill); }
+function idx(x,y,n){ return y*n+x; }
+function ensure(){ const need=state.res*state.res; if(!state.pixels || state.pixels.length!==need) state.pixels=make(state.res); if(state.sel && (state.sel.x>=state.res||state.sel.y>=state.res)) state.sel=null; }
+function paint(x,y){ if(x<0||y<0||x>=state.res||y>=state.res) return; state.pixels[idx(x,y,state.res)] = state.tool==='erase' ? '#0b1d33' : state.color; state.sel={x,y}; }
+function pos(e,canvas){ const r=canvas.getBoundingClientRect(); const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left; const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top; return {x:clamp(Math.floor(cx/r.width*state.res),0,state.res-1), y:clamp(Math.floor(cy/r.height*state.res),0,state.res-1)}; }
+function draw(){ const c=state.body?.querySelector('[data-px-canvas]'); if(!c) return; const n=state.res,z=state.zoom,dpr=window.devicePixelRatio||1,size=n*z; c.style.width=size+'px'; c.style.height=size+'px'; c.width=Math.floor(size*dpr); c.height=Math.floor(size*dpr); const ctx=c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); for(let y=0;y<n;y++) for(let x=0;x<n;x++){ ctx.fillStyle=state.pixels[idx(x,y,n)]; ctx.fillRect(x*z,y*z,z,z); }
+  ctx.strokeStyle='rgba(167,184,204,.16)'; ctx.lineWidth=1; ctx.beginPath(); for(let i=0;i<=n;i++){ ctx.moveTo(i*z+.5,0); ctx.lineTo(i*z+.5,n*z); ctx.moveTo(0,i*z+.5); ctx.lineTo(n*z,i*z+.5);} ctx.stroke();
+  if(state.sel){ ctx.strokeStyle='#35c5e8'; ctx.lineWidth=Math.max(2,z/8); ctx.strokeRect(state.sel.x*z+1,state.sel.y*z+1,z-2,z-2); }
+}
+function inspect(){ if(!state.sel) return `<p class="px-inspect__empty">${t('pixelLab.grid.none')}</p>`; const hex=state.pixels[idx(state.sel.x,state.sel.y,state.res)]; const {r,g,b}=hexToRgb(hex); return `<div class="px-inspect__pos"><span>${t('pixelLab.grid.pos')}</span> <code>x:${state.sel.x+1}, y:${state.sel.y+1}</code></div><div class="px-inspect__swatch" style="background:${hex}"></div><dl class="px-inspect__dl"><div><dt>${t('pixelLab.grid.rgb')}</dt><dd><code>RGB(${r}, ${g}, ${b})</code></dd></div><div><dt>${t('pixelLab.grid.hex')}</dt><dd><code>${hex.toUpperCase()}</code></dd></div><div><dt>${t('pixelLab.grid.binary')}</dt><dd class="px-inspect__bins"><span class="ch ch--r"><em>R</em> <code>${toBin8(r)}</code></span><span class="ch ch--g"><em>G</em> <code>${toBin8(g)}</code></span><span class="ch ch--b"><em>B</em> <code>${toBin8(b)}</code></span></dd></div></dl>`; }
+function bytes(){ return Math.max(0,Math.floor(Number(state.calcW)||0))*Math.max(0,Math.floor(Number(state.calcH)||0))*3; }
+function shell(){ const b=bytes(); return `
+  <div class="pxlab">
+    <section class="pxlab__concepts"><h3>${t('pixelLab.concepts.title')}</h3><div class="pxlab__facts">${[['pixel','pixel'],['resolution','resolution'],['rgb','rgb'],['channels','channels'],['bitdepth','bitdepth'],['formats','formats'],['compression','compression']].map(([k])=>`<div class="pxlab__fact"><strong>${t('pixelLab.concepts.'+k+'.t')}</strong><span>${t('pixelLab.concepts.'+k+'.b')}</span></div>`).join('')}</div></section>
+    <section class="pxlab__grid-sec"><div class="pxlab__grid-head"><h3>${t('pixelLab.grid.title')}</h3><p>${t('pixelLab.grid.lead')}</p></div>
+      <div class="pxlab__grid-layout">
+        <div class="pxlab__tools">
+          <label class="pxlab__field"><span>${t('pixelLab.grid.color')}</span><input type="color" value="${esc(state.color)}" data-px-color /></label>
+          <div class="pxlab__palette">${PALETTE.map(c=>`<button type="button" class="swatch ${state.color.toLowerCase()===c?'is-active':''}" data-px-swatch="${c}" style="--sw:${c}" aria-label="${c}"></button>`).join('')}</div>
+          <div class="pxlab__toolrow"><button type="button" class="pxlab__btn ${state.tool==='paint'?'is-active':''}" data-px-tool="paint">${t('pixelLab.grid.toolPaint')}</button><button type="button" class="pxlab__btn ${state.tool==='erase'?'is-active':''}" data-px-tool="erase">${t('pixelLab.grid.toolErase')}</button><button type="button" class="pxlab__btn" data-px-clear>${t('pixelLab.grid.clear')}</button></div>
+          <label class="pxlab__field"><span>${t('pixelLab.grid.zoom')}</span><input type="range" min="8" max="28" step="1" value="${state.zoom}" data-px-zoom /><output>${state.zoom}px</output></label>
+          <label class="pxlab__field"><span>${t('images.lab.grid')}</span><select data-px-res>${[8,16,24,32].map(n=>`<option value="${n}" ${state.res===n?'selected':''}>${n} × ${n}</option>`).join('')}</select></label>
+        </div>
+        <div class="pxlab__canvas-wrap"><div class="pxlab__canvas-scroll"><canvas class="pxlab__canvas" data-px-canvas></canvas></div></div>
+        <div class="pxlab__inspect" data-px-inspect>${inspect()}</div>
+      </div>
+    </section>
+    <div class="pxlab__bottom">
+      <section class="pxlab__card"><h3>${t('pixelLab.res.title')}</h3><p>${t('pixelLab.res.lead')}</p><p class="pxlab__note">${t('pixelLab.res.note')}</p><div class="vidpipe" aria-hidden="true"><div class="vidpipe__step"><span class="vidpipe__label">8×8</span></div><div class="vidpipe__arrow">→</div><div class="vidpipe__step"><span class="vidpipe__label">16×16</span></div><div class="vidpipe__arrow">→</div><div class="vidpipe__step is-active"><span class="vidpipe__label">32×32</span></div></div></section>
+      <section class="pxlab__card"><h3>${t('pixelLab.calc.title')}</h3><p>${t('pixelLab.calc.lead')}</p><div class="pxlab__calc-form"><label class="pxlab__field"><span>${t('pixelLab.calc.width')}</span><input type="number" min="1" value="${state.calcW}" data-px-w /></label><label class="pxlab__field"><span>${t('pixelLab.calc.height')}</span><input type="number" min="1" value="${state.calcH}" data-px-h /></label></div><div class="pxlab__calc-result" data-px-calc><code>largeur × hauteur × 3 = ${b.toLocaleString('fr-FR')} octets (RGB)</code><div class="pxlab__stats"><div><span>${t('pixelLab.calc.bytes')}</span><strong>${b.toLocaleString('fr-FR')}</strong></div><div><span>≈ Kio</span><strong>${(b/1024).toFixed(1)}</strong></div><div><span>≈ Mio</span><strong>${(b/1048576).toFixed(2)}</strong></div></div></div><p class="pxlab__note">${t('pixelLab.calc.note')}</p></section>
+    </div>
+    <section class="pxlab__card"><h3>${t('pixelLab.formats.title')}</h3><div class="pxlab__facts">${['png','jpeg','webp','svg','raw'].map(k=>`<div class="pxlab__fact"><strong>${t('pixelLab.formats.'+k+'.t')}</strong><span>${t('pixelLab.formats.'+k+'.b')}</span></div>`).join('')}</div></section>
+  </div>`; }
+function bindGrid(){ const canvas=state.body.querySelector('[data-px-canvas]'); if(!canvas) return; const down=(e)=>{ state.drawing=true; const p=pos(e,canvas); paint(p.x,p.y); draw(); updateInspect(); e.preventDefault(); }; const move=(e)=>{ if(!state.drawing) return; const p=pos(e,canvas); paint(p.x,p.y); draw(); updateInspect(); e.preventDefault(); }; const up=()=>{ state.drawing=false; };
+  canvas.addEventListener('pointerdown',down); canvas.addEventListener('pointermove',move); window.addEventListener('pointerup',up); state._unbind=()=>{ canvas.removeEventListener('pointerdown',down); canvas.removeEventListener('pointermove',move); window.removeEventListener('pointerup',up); }; canvas.style.touchAction='none'; }
+function updateInspect(){ const box=state.body.querySelector('[data-px-inspect]'); if(box) box.innerHTML=inspect(); }
+function updateCalc(){ const b=bytes(); const box=state.body.querySelector('[data-px-calc]'); if(box) box.innerHTML=`<code>largeur × hauteur × 3 = ${b.toLocaleString('fr-FR')} octets (RGB)</code><div class="pxlab__stats"><div><span>${t('pixelLab.calc.bytes')}</span><strong>${b.toLocaleString('fr-FR')}</strong></div><div><span>≈ Kio</span><strong>${(b/1024).toFixed(1)}</strong></div><div><span>≈ Mio</span><strong>${(b/1048576).toFixed(2)}</strong></div></div>`; }
+function render(){ if(!state.body) return; state._unbind?.(); ensure(); state.body.innerHTML=shell(); applyTranslations(state.body); draw(); bindGrid(); }
+export function initImageLab(root){ if(!(root instanceof HTMLElement)) return null; if(state.root===root && state.body) return {root,destroy:destroyImageLab}; destroyImageLab(); state.root=root; state.body=root.querySelector('.lab-frame__body'); if(!state.body) return null; root.classList.add('lab-frame--mounted'); root.dataset.moduleState='mounted'; render();
+  state.body.addEventListener('input',(e)=>{ if(e.target.matches('[data-px-color]')){ state.color=e.target.value; render(); } if(e.target.matches('[data-px-zoom]')){ state.zoom=Number(e.target.value)||16; render(); } if(e.target.matches('[data-px-res]')){ state.res=Number(e.target.value)||16; state.pixels=null; render(); } if(e.target.matches('[data-px-w]')){ state.calcW=e.target.value; updateCalc(); } if(e.target.matches('[data-px-h]')){ state.calcH=e.target.value; updateCalc(); } });
+  state.body.addEventListener('click',(e)=>{ const sw=e.target.closest('[data-px-swatch]'); if(sw){ state.color=sw.dataset.pxSwatch; render(); } const tool=e.target.closest('[data-px-tool]'); if(tool){ state.tool=tool.dataset.pxTool; render(); } if(e.target.closest('[data-px-clear]')){ state.pixels=make(state.res); state.sel=null; render(); } });
+  return {root,destroy:destroyImageLab}; }
+export function destroyImageLab(){ state._unbind?.(); if(state.root){ state.root.classList.remove('lab-frame--mounted'); if(state.root.dataset) state.root.dataset.moduleState='pending'; } state.root=null; state.body=null; state.pixels=null; state.sel=null; }
