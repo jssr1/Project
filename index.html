@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inside the Computer — Comprendre le fonctionnement d'un ordinateur</title>
+  <meta name="description" content="Parcours interactif en français pour comprendre les composants, les données, le binaire, les images et la vidéo.">
+  <meta name="theme-color" content="#071426">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="color-scheme" content="dark">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>document.documentElement.classList.add('js');document.documentElement.dataset.theme='dark';</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Aller au contenu</a>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="#home" data-nav-link="home" aria-label="Inside the Computer">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><rect x="7.5" y="7.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.4"/><rect x="12" y="12" width="8" height="8" rx="1.6" fill="currentColor"/><path d="M11 3.5v4M16 3.5v4M21 3.5v4M11 24.5v4M16 24.5v4M21 24.5v4M3.5 11h4M3.5 16h4M3.5 21h4M24.5 11h4M24.5 16h4M24.5 21h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </span>
+        <span class="brand__copy"><strong>Inside the Computer</strong><span>Laboratoire numérique interactif</span></span>
+      </a>
+      <nav class="primary-nav" id="primary-nav" aria-label="Navigation principale">
+        <ul>
+          <li><a href="#home" data-nav-link="home"><span class="nav-index">00</span><span>Accueil</span></a></li>
+          <li><a href="#decouvrir" data-nav-link="decouvrir"><span class="nav-index">01</span><span>Découvrir</span></a></li>
+          <li><a href="#circulation" data-nav-link="circulation"><span class="nav-index">02</span><span>Circulation</span></a></li>
+          <li><a href="#binaire" data-nav-link="binaire"><span class="nav-index">03</span><span>Binaire</span></a></li>
+          <li><a href="#images" data-nav-link="images"><span class="nav-index">04</span><span>Images</span></a></li>
+          <li><a href="#video" data-nav-link="video"><span class="nav-index">05</span><span>Vidéo</span></a></li>
+          <li><a href="#synthese" data-nav-link="synthese"><span class="nav-index">06</span><span>Synthèse</span></a></li>
+        </ul>
+      </nav>
+      <div class="site-header__actions">
+        <button class="menu-toggle" type="button" data-menu-toggle aria-controls="primary-nav" aria-expanded="false" aria-label="Ouvrir le menu">
+          <span class="menu-toggle__bars" aria-hidden="true"><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="nav-scrim" data-nav-scrim hidden></div>
+  <main id="main-content" tabindex="-1">
+    <section class="view is-active home-view" id="home" data-view="home" aria-labelledby="home-title">
+      <div class="container hero hero--journey">
+        <div class="hero__copy">
+          <p class="hero__kicker"><span class="signal-dot" aria-hidden="true"></span>Projet universitaire — Parcours d'apprentissage</p>
+          <h1 id="home-title">Comprendre le fonctionnement d'un ordinateur</h1>
+          <p class="hero__subtitle">Explorez les composants, suivez le trajet des données, manipulez le binaire, composez des pixels et observez comment les images deviennent une vidéo.</p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#decouvrir" data-nav-link="decouvrir">Commencer le parcours</a>
+            <a class="button button--ghost" href="#circulation" data-nav-link="circulation">Suivre une donnée</a>
+          </div>
+        </div>
+        <div class="hero__visual journey-map" aria-label="Parcours en 6 étapes">
+          <h2 class="journey-map__title">Parcours en 6 étapes</h2>
+          <ol class="journey-list">
+            <li><a class="journey-step" href="#decouvrir" data-nav-link="decouvrir"><span class="journey-step__n">01</span><span><strong>Découvrir l'ordinateur</strong><small>Composants essentiels et rôles</small></span></a></li>
+            <li><a class="journey-step" href="#circulation" data-nav-link="circulation"><span class="journey-step__n">02</span><span><strong>Circulation des données</strong><small>De la touche A à l'écran</small></span></a></li>
+            <li><a class="journey-step" href="#binaire" data-nav-link="binaire"><span class="journey-step__n">03</span><span><strong>Langage binaire</strong><small>Bits, conversions, ASCII/Unicode</small></span></a></li>
+            <li><a class="journey-step" href="#images" data-nav-link="images"><span class="journey-step__n">04</span><span><strong>Images numériques</strong><small>Pixels, RGB, résolution</small></span></a></li>
+            <li><a class="journey-step" href="#video" data-nav-link="video"><span class="journey-step__n">05</span><span><strong>Vidéo</strong><small>Images par seconde et décodage</small></span></a></li>
+            <li><a class="journey-step" href="#synthese" data-nav-link="synthese"><span class="journey-step__n">06</span><span><strong>Synthèse et quiz</strong><small>Vérifier les notions clés</small></span></a></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="decouvrir" data-view="decouvrir" aria-labelledby="decouvrir-title" hidden>
+      <div class="container view-header">
+        <p class="eyebrow"><span class="nav-index">01</span><span>Découvrir l'ordinateur</span></p>
+        <h1 id="decouvrir-title">Découvrir l'ordinateur</h1>
+        <p class="view-header__lead">Un ordinateur combine plusieurs composants spécialisés. Sélectionnez un composant pour comprendre son rôle, ses échanges et un exemple concret.</p>
+      </div>
+      <div class="container"><div class="lab-frame" id="decouvrir-lab" data-module="decouvrir" data-module-state="pending"><div class="lab-frame__bar" aria-hidden="true"><span class="lab-frame__lights"><i></i><i></i><i></i></span><span class="lab-frame__path">~/sections/decouvrir</span><span class="lab-frame__status">Interactif</span></div><div class="lab-frame__body"></div></div></div>
+      <div class="container view-next"><span class="view-next__label">Section suivante</span><a class="view-next__link" href="#circulation" data-nav-link="circulation"><span>Circulation des données</span></a></div>
+    </section>
+
+    <section class="view" id="circulation" data-view="circulation" aria-labelledby="circulation-title" hidden>
+      <div class="container view-header">
+        <p class="eyebrow"><span class="nav-index">02</span><span>Circulation des données</span></p>
+        <h1 id="circulation-title">Comment circulent les données ?</h1>
+        <p class="view-header__lead">Exemple : un étudiant appuie sur la touche A. Suivez la saisie, la représentation numérique, la mémoire, le traitement et l'affichage.</p>
+      </div>
+      <div class="container"><div class="lab-frame" id="circulation-lab" data-module="circulation" data-module-state="pending"><div class="lab-frame__bar" aria-hidden="true"><span class="lab-frame__lights"><i></i><i></i><i></i></span><span class="lab-frame__path">~/sections/circulation</span><span class="lab-frame__status">Interactif</span></div><div class="lab-frame__body"></div></div></div>
+      <div class="container view-next"><span class="view-next__label">Section suivante</span><a class="view-next__link" href="#binaire" data-nav-link="binaire"><span>Langage binaire</span></a></div>
+    </section>
+
+    <section class="view" id="binaire" data-view="binaire" aria-labelledby="binaire-title" hidden>
+      <div class="container view-header">
+        <p class="eyebrow"><span class="nav-index">03</span><span>Langage binaire</span></p>
+        <h1 id="binaire-title">Le langage binaire</h1>
+        <p class="view-header__lead">Manipulez des bits, convertissez des nombres et observez comment les caractères sont encodés en ASCII et Unicode.</p>
+      </div>
+      <div class="container"><div class="lab-frame" id="binaire-lab" data-module="binaire" data-module-state="pending"><div class="lab-frame__bar" aria-hidden="true"><span class="lab-frame__lights"><i></i><i></i><i></i></span><span class="lab-frame__path">~/sections/binaire</span><span class="lab-frame__status">Interactif</span></div><div class="lab-frame__body"></div></div></div>
+      <div class="container view-next"><span class="view-next__label">Section suivante</span><a class="view-next__link" href="#images" data-nav-link="images"><span>Images numériques</span></a></div>
+    </section>
+
+    <section class="view" id="images" data-view="images" aria-labelledby="images-title" hidden>
+      <div class="container view-header">
+        <p class="eyebrow"><span class="nav-index">04</span><span>Images numériques</span></p>
+        <h1 id="images-title">Comment une image est-elle affichée ?</h1>
+        <p class="view-header__lead">Une image est une grille de pixels. Explorez le RGB, la résolution, la profondeur de couleur et les formats.</p>
+      </div>
+      <div class="container"><div class="lab-frame" id="images-lab" data-module="images" data-module-state="pending"><div class="lab-frame__bar" aria-hidden="true"><span class="lab-frame__lights"><i></i><i></i><i></i></span><span class="lab-frame__path">~/sections/images</span><span class="lab-frame__status">Interactif</span></div><div class="lab-frame__body"></div></div></div>
+      <div class="container view-next"><span class="view-next__label">Section suivante</span><a class="view-next__link" href="#video" data-nav-link="video"><span>Vidéo</span></a></div>
+    </section>
+
+    <section class="view" id="video" data-view="video" aria-labelledby="video-title" hidden>
+      <div class="container view-header">
+        <p class="eyebrow"><span class="nav-index">05</span><span>Vidéo</span></p>
+        <h1 id="video-title">Comment fonctionne une vidéo ?</h1>
+        <p class="view-header__lead">Une vidéo est une succession d'images. Ajustez les images par seconde pour comprendre la fluidité, et reliez FPS, résolution, compression et décodage.</p>
+      </div>
+      <div class="container"><div class="lab-frame" id="video-lab" data-module="video" data-module-state="pending"><div class="lab-frame__bar" aria-hidden="true"><span class="lab-frame__lights"><i></i><i></i><i></i></span><span class="lab-frame__path">~/sections/video</span><span class="lab-frame__status">Interactif</span></div><div class="lab-frame__body"></div></div></div>
+      <div class="container view-next"><span class="view-next__label">Section suivante</span><a class="view-next__link" href="#synthese" data-nav-link="synthese"><span>Synthèse et quiz</span></a></div>
+    </section>
+
+    <section class="view" id="synthese" data-view="synthese" aria-labelledby="synthese-title" hidden>
+      <div class="container view-header">
+        <p class="eyebrow"><span class="nav-index">06</span><span>Synthèse et quiz</span></p>
+        <h1 id="synthese-title">Récapitulatif et quiz</h1>
+        <p class="view-header__lead">Revoyez les notions essentielles, puis vérifiez votre compréhension avec un quiz interactif.</p>
+      </div>
+      <div class="container"><div class="lab-frame" id="synthese-lab" data-module="synthese" data-module-state="pending"><div class="lab-frame__bar" aria-hidden="true"><span class="lab-frame__lights"><i></i><i></i><i></i></span><span class="lab-frame__path">~/sections/synthese</span><span class="lab-frame__status">Interactif</span></div><div class="lab-frame__body" id="synthese-lab-body"></div></div></div>
+      <div class="container view-next"><span class="view-next__label">Retour</span><a class="view-next__link" href="#home" data-nav-link="home"><span>Accueil</span></a></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p><strong>Inside the Computer</strong> — parcours interactif sur le fonctionnement d'un ordinateur.</p>
+      <p class="site-footer__meta">Projet éducatif en HTML, CSS et JavaScript. <button class="text-link" type="button" data-scroll-top>Haut de page</button></p>
+    </div>
+  </footer>
+  <noscript><div class="noscript"><strong>JavaScript est requis.</strong> Ce parcours utilise JavaScript pour la navigation et les activités interactives.</div></noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
